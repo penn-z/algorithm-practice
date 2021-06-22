@@ -47,6 +47,9 @@ func main() {
 
 	vals = midorderIteration(root)
 	fmt.Printf("vals2:%v\n", vals)
+
+	vals = midorderIterationTemplate(root)
+	fmt.Printf("vals3:%v\n", vals)
 }
 
 // 中序遍历-递归
@@ -71,7 +74,6 @@ func midorderTravesal(root *TreeNode) (vals []int) {
 }
 
 // 中序遍历-迭代
-//
 func midorderIteration(root *TreeNode) (vals []int) {
 	// 栈记录 寻找最左节点的经过路径
 	stack := []*TreeNode{}
@@ -94,6 +96,30 @@ func midorderIteration(root *TreeNode) (vals []int) {
 		if top.Right != nil {
 			currNode = top.Right
 		}
+	}
+
+	return
+}
+
+// 僵尸模板法 //TODO: 需要理解
+func midorderIterationTemplate(root *TreeNode) (vals []int) {
+	// 先将根节点cur和所有左孩子入栈，直至cur为空
+	stack := []*TreeNode{}
+
+	// 根节点入栈
+	curNode := root
+
+	for curNode != nil || len(stack) > 0 {
+		for curNode != nil {
+			stack = append(stack, curNode)
+			curNode = curNode.Left
+		}
+
+		// 每弹出一个栈顶元素，将此元素加入结果中，到达它的右孩子，并将这个节点当做cur重新执行步骤，直至栈为空
+		top := stack[len(stack)-1]
+		vals = append(vals, top.Val)
+		stack = stack[:len(stack)-1]
+		curNode = top.Right
 	}
 
 	return

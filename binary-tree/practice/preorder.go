@@ -49,7 +49,7 @@ func main() {
 	vals2 := preorderIteration(root)
 	fmt.Printf("iteration vals:%v\n", vals2)
 
-	vals3 := preorderIterationV2(root)
+	vals3 := preorderIterationTemplate(root)
 	fmt.Printf("iteration val3:%v\n", vals3)
 
 }
@@ -104,16 +104,15 @@ func preorderIteration(root *TreeNode) (vals []int) {
 }
 
 // 僵尸模板解法
-func preorderIterationV2(root *TreeNode) (vals []int) {
+func preorderIterationTemplate(root *TreeNode) (vals []int) {
 	// 先将根节点cur和所有左孩子入栈并加入结果中，直至cur为空，有个一个while循环实现
 	stack := []*TreeNode{}
 
-	// 根节点、左孩子入栈
 	curNode := root
 	// stack = append(stack, root)
 
 	for curNode != nil || len(stack) > 0 {
-		for curNode != nil {
+		for curNode != nil { // 根节点、左孩子入栈
 			vals = append(vals, curNode.Val)
 			stack = append(stack, curNode)
 			curNode = curNode.Left
@@ -123,9 +122,7 @@ func preorderIterationV2(root *TreeNode) (vals []int) {
 		top := stack[len(stack)-1]
 		stack = stack[:len(stack)-1]
 
-		if top.Right != nil {
-			curNode = top.Right
-		}
+		curNode = top.Right
 	}
 
 	return
