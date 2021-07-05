@@ -1,10 +1,10 @@
 package main
 
-type TreeTreeNode struct {
+type TreeNode struct {
 	Val   int
-	Left  *TreeTreeNode
-	Right *TreeTreeNode
-	Next  *TreeTreeNode
+	Left  *TreeNode
+	Right *TreeNode
+	Next  *TreeNode
 }
 
 func main() {
@@ -12,7 +12,7 @@ func main() {
 }
 
 // 不使用BFS，空间复杂度O(1)
-func connect(root *TreeTreeNode) *TreeTreeNode {
+func connect(root *TreeNode) *TreeNode {
 	if root == nil {
 		return root
 	}
