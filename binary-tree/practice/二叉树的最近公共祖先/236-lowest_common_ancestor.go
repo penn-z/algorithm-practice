@@ -49,12 +49,9 @@ func lowestCommonAncestor(root, p, q *TreeNode) *TreeNode {
 			break
 		}
 
-		fmt.Printf("======parentMap:%+v \n", parentMap)
 		// 队头元素出队
 		node := queue[0]
 		queue = queue[1:]
-
-		fmt.Printf("========node:%d\n", node.Val)
 
 		if node.Left != nil {
 			// 加入parentMap
@@ -70,8 +67,6 @@ func lowestCommonAncestor(root, p, q *TreeNode) *TreeNode {
 			queue = append(queue, node.Right)
 		}
 	}
-
-	fmt.Printf("======final parentMap:%+v \n", parentMap)
 
 	// p节点往上移动，往祖先节点移动
 	for p != nil {
