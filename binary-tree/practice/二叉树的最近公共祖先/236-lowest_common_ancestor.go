@@ -26,6 +26,8 @@ func main() {
 
 	ancestor := lowestCommonAncestor(root, root, node2)
 	fmt.Printf("lowest common ancestor:%v", ancestor)
+	ancestor2 := lowestCommonAncestorRecusion(root, root, node2)
+	fmt.Printf("lowest common ancestor2:%v", ancestor2)
 }
 
 /*
@@ -85,6 +87,48 @@ func lowestCommonAncestor(root, p, q *TreeNode) *TreeNode {
 
 		// 向上父节点移动
 		q = parentMap[q.Val]
+	}
+
+	return nil
+}
+
+// 递归写法
+/*
+	思路:
+	1. 遇到二叉树问题，需要递归，先把框架写出来
+*/
+func lowestCommonAncestorRecusion(root, p, q *TreeNode) *TreeNode {
+	// base case
+	if root == nil {
+		return nil
+	}
+
+	if root == p || root == q {
+		return root
+	}
+
+	// 递归框架过程
+	left := lowestCommonAncestorRecusion(root.Left, p, q)
+	right := lowestCommonAncestorRecusion(root.Right, p, q)
+
+	// 得到递归调用的结果，搞事情
+	// 1. 若p, q都在以当前root为根的的树中，那么left 和right一定分别是p和q
+	if left != nil && right != nil {
+		return root
+	}
+
+	// 2. 如果p, q都不在以当前root为根的树中，直接返回nil，没啥可说
+	if left == nil && right == nil {
+		return nil
+	}
+
+	// 3. 如果p和q只有一个存在于以当前root为根的数组，函数返回该节点
+	if left == nil && right != nil {
+		return right
+	}
+
+	if right == nil && left != nil {
+		return left
 	}
 
 	return nil
