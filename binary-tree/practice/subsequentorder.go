@@ -45,6 +45,9 @@ func main() {
 
 	vals2 := subsequentorderIterationTemplate(root)
 	fmt.Printf("vals2:%v\n", vals2)
+
+	vals3 := subsequentorderIterationTemplateV2(root)
+	fmt.Printf("vals3:%v\n", vals3)
 }
 
 func subsequentorderTravesal(root *TreeNode) (vals []int) {
@@ -77,7 +80,7 @@ func subsequentorderTravesal(root *TreeNode) (vals []int) {
 func subsequentorderIterationTemplate(root *TreeNode) (vals []int) {
 	stack := []*TreeNode{}
 
-	// 根节点入栈
+	// 根节点开始
 	curNode := root
 	for curNode != nil || len(stack) > 0 {
 		for curNode != nil { // 根节点、右孩子入栈
@@ -101,3 +104,37 @@ func subsequentorderIterationTemplate(root *TreeNode) (vals []int) {
 }
 
 // 模板解法(标准)
+func subsequentorderIterationTemplateV2(root *TreeNode) (vals []int) {
+	stack := []*TreeNode{}
+	pre := &TreeNode{} // 用于记录前一个访问的节点
+
+	// 根节点开始
+	curNode := root
+	for curNode != nil || len(stack) > 0 {
+		for curNode != nil {
+			// 当前节点入栈
+			stack = append(stack, curNode)
+			curNode = curNode.Left // 左
+		}
+
+		// 弹出一个栈顶元素top，就到达它的右孩子，再将这个节点当成cur重新执行上述步骤，直至栈为空
+		// 如何访问根节点top呢？？如果右子树为空或者已经访问过了，则此时访问根节点
+
+		top := stack[len(stack)-1]
+		stack = stack[:len(stack)-1]
+
+		if top.Right != nil && top.Right != pre {
+			// 再次压回栈中
+			stack = append(stack, top)
+			// 访问右子树
+			curNode = top.Right // 右
+		} else {
+			// 访问根节点
+			vals = append(vals, top.Val) // 根
+			pre = top                    // 更新访问记录
+			// top = nil
+		}
+	}
+
+	return vals
+}

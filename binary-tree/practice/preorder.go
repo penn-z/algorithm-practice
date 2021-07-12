@@ -113,16 +113,16 @@ func preorderIterationTemplate(root *TreeNode) (vals []int) {
 
 	for curNode != nil || len(stack) > 0 {
 		for curNode != nil { // 根节点、左孩子入栈
-			vals = append(vals, curNode.Val)
+			vals = append(vals, curNode.Val) // 根
 			stack = append(stack, curNode)
-			curNode = curNode.Left
+			curNode = curNode.Left // 左
 		}
 
 		// 每弹出一个栈顶元素top，就到达它的右孩子，再将这个节点当做cur重新按照上面的步骤来一遍，直至栈为空
 		top := stack[len(stack)-1]
 		stack = stack[:len(stack)-1]
 
-		curNode = top.Right
+		curNode = top.Right // 右
 	}
 
 	return

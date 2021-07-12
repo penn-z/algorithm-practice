@@ -1,5 +1,9 @@
 package main
 
+/*
+	leetcode 589: n叉树的前序遍历
+*/
+
 import "fmt"
 
 type Node struct {
@@ -62,7 +66,7 @@ func preorder(root *Node) []int {
 
 // 迭代
 func preorderIteration(root *Node) []int {
-	// BFS
+	// DFS
 	res := []int{}
 
 	if root == nil {

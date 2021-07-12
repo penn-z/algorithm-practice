@@ -112,13 +112,13 @@ func midorderIterationTemplate(root *TreeNode) (vals []int) {
 	for curNode != nil || len(stack) > 0 {
 		for curNode != nil {
 			stack = append(stack, curNode)
-			curNode = curNode.Left
+			curNode = curNode.Left // 左
 		}
 
 		// 每弹出一个栈顶元素，将此元素加入结果中，到达它的右孩子，并将这个节点当做cur重新执行步骤，直至栈为空
 		top := stack[len(stack)-1]
-		vals = append(vals, top.Val)
-		stack = stack[:len(stack)-1]
+		vals = append(vals, top.Val) // 根
+		stack = stack[:len(stack)-1] // 右
 		curNode = top.Right
 	}
 
