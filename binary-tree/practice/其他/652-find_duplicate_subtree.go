@@ -18,8 +18,8 @@ type TreeNode struct {
 	Right *TreeNode
 }
 
-treeMap := make(map[string]int)
-resList := []*TreeNode{}
+var treeMap = make(map[string]int)
+var resList = []*TreeNode{}
 
 func main() {
 
