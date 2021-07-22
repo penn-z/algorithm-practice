@@ -25,3 +25,31 @@ type TreeNode struct {
 func main() {
 
 }
+
+func constructMaximumBinaryTree(nums []int) *TreeNode {
+	// base case
+	if len(nums) < 1 {
+		return nil
+	}
+
+	// 找出数组中最大值元素
+	max := ^int(^uint(0) >> 1)
+	maxIndex := -1
+	for i, item := range nums {
+		if item > max {
+			max = item
+			maxIndex = i
+		}
+	}
+
+	root := &TreeNode{
+		Val: max,
+	}
+
+	// 左子树递归
+	root.Left = constructMaximumBinaryTree(nums[0:maxIndex])
+	root.Right = constructMaximumBinaryTree(nums[maxIndex+1:])
+
+	// 右子树递归
+	return root
+}
