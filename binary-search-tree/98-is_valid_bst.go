@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"math"
+)
 
 /*
 	leetcode-98 验证二叉搜索树
@@ -71,4 +74,39 @@ func midOrder(root *TreeNode) {
 	// 右
 	midOrder(root.Right)
 	return
+}
+
+// 是否搜索二叉树
+/*
+	思路:
+		1. 迭代中序遍历树
+		2. 迭代过程中实时检查当前节点的val是否大于前一个中序遍历到的节点的之即可
+*/
+func isValidBSTV2(root *TreeNode) bool {
+	// 先将根节点root和所有左孩子入栈
+	stack := []*TreeNode{}
+
+	tmpNodeVal := math.MinInt64
+	for len(stack) > 0 || root != nil {
+		// 遍历左孩子，加入栈中，直至root为空
+		for root != nil {
+			stack = append(stack, root)
+			root = root.Left
+		}
+
+		// 处理中间结点
+		// 弹出栈顶元素，将此元素加入结果中，到达它的右孩子，并将这个节点当做cur重新执行步骤，直至栈为空
+		top := stack[len(stack)-1]
+		stack = stack[:len(stack)-1]
+
+		// 中间节点
+		if top.Val <= tmpNodeVal {
+			return false
+		}
+
+		tmpNodeVal = top.Val
+		root = top.Right
+	}
+
+	return true
 }
