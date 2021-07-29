@@ -46,7 +46,7 @@ func searchBSTRecursion(root *TreeNode, val int) *TreeNode {
 	return nil
 }
 
-// 思路2: 迭代，也没啥好说的，唯一要注意题目已经给定了二叉搜索树，可降低搜索复杂地
+// 思路2: 迭代，也没啥好说的
 func searchBSTIterator(root *TreeNode, val int) *TreeNode {
 	// base case
 	if root == nil {
@@ -95,6 +95,17 @@ func searchBSTIterator(root *TreeNode, val int) *TreeNode {
 		stack = stack[:len(stack)-1]
 		curNode = top.Right
 	}
+
+	return nil
+}
+
+// 迭代版本2
+/*
+	利用二叉搜索树特性，可以不借助辅助栈或者队列
+	对于二叉搜索树，不需要回溯的过程，因为节点的有序性已经帮我们确定了搜索方向
+	节点小于目标值，则往左子树搜索，否则往右子树搜索
+*/
+func searchBSTIteratorV2(root *TreeNode, val int) *TreeNode {
 
 	return nil
 }
