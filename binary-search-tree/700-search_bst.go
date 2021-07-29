@@ -106,6 +106,15 @@ func searchBSTIterator(root *TreeNode, val int) *TreeNode {
 	节点小于目标值，则往左子树搜索，否则往右子树搜索
 */
 func searchBSTIteratorV2(root *TreeNode, val int) *TreeNode {
+	for root != nil {
+		if root.Val > val {
+			root = root.Left
+		} else if root.Val < val {
+			root = root.Right
+		} else {
+			return root
+		}
+	}
 
 	return nil
 }
