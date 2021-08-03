@@ -63,7 +63,7 @@ func deleteNodeBstRecusion(root *TreeNode, target int) *TreeNode {
 		// 情况3， 当前节点有两个子节点
 		// 找到左子树中最大的节点或者右子树中最小节点
 		// 这里拿右子树中最小节点示例
-		minNode := getMin(root.Right) // 获取右子树最小节点
+		minNode := getMin(root.Right) // 获取右子树最小节点，即右子树中最左节点
 
 		// 替换当前节点值
 		root.Val = minNode.Val
@@ -88,3 +88,14 @@ func getMin(root *TreeNode) *TreeNode {
 
 	return root
 }
+
+/*
+根据二叉搜索树的性质
+
+如果目标节点大于当前节点值，则去右子树中删除；
+如果目标节点小于当前节点值，则去左子树中删除；
+如果目标节点就是当前节点，分为以下三种情况：
+	其无左子：其右子顶替其位置，删除了该节点；
+	其无右子：其左子顶替其位置，删除了该节点；
+	其左右子节点都有：其左子树转移到其右子树的最左节点的左子树上，然后右子树顶替其位置，由此删除了该节点。
+*/
