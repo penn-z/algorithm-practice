@@ -27,43 +27,35 @@ func isBalanced(root *TreeNode) bool {
 		return true
 	}
 
-	var postOrder func(*TreeNode) (int, bool)
-
-	postOrder = func(root *TreeNode) (int, bool) {
+	// 出参是当前入参节点高度，若小于0则代表该节点非平衡树
+	var postOrder func(*TreeNode) int
+	postOrder = func(root *TreeNode) int {
 		if root == nil {
-			return 0, true
+			return 0
 		}
 
 		// 左
-		heightLeft, balance := postOrder(root.Left)
-		if !balance {
-			return 0, false
+		heightLeft := postOrder(root.Left)
+		if heightLeft < 0 {
+			return -1
 		}
 
 		// 右
-		heightRight, balance := postOrder(root.Right)
-		if !balance {
-			return 0, false
+		heightRight := postOrder(root.Right)
+		if heightRight < 0 {
+			return -1
+		}
+
+		if abs(heightLeft, heightRight) > 1 {
+			return -1
 		}
 
 		// 当前节点高度
-		var curNodeHeight int
-		if heightLeft > heightRight {
-			curNodeHeight = heightLeft + 1
-		} else {
-			curNodeHeight = heightRight + 1
-		}
-
-		var isBalance bool
-		if abs(heightLeft, heightRight) <= 1 {
-			isBalance = true
-		}
-
-		return curNodeHeight, isBalance
+		return max(heightLeft, heightRight) + 1
 	}
 
-	_, isBlance := postOrder(root)
-	return isBlance
+	height := postOrder(root)
+	return height >= 0
 }
 
 func abs(x, y int) int {
@@ -72,4 +64,12 @@ func abs(x, y int) int {
 	}
 
 	return y - x
+}
+
+func max(x, y int) int {
+	if x > y {
+		return x
+	}
+
+	return y
 }
