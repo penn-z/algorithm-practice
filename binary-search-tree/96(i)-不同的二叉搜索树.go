@@ -35,8 +35,8 @@ func count(lowest, highest int) int {
 		return 1
 	}
 
-	if memoRes, ok := memo[lowest][highest]; ok {
-		return memoRes
+	if innerRes := memo[lowest][highest]; innerRes != 0 {
+		return innerRes
 	}
 
 	var res int
