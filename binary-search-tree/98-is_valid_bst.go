@@ -110,3 +110,31 @@ func isValidBSTV2(root *TreeNode) bool {
 
 	return true
 }
+
+func isValidBSTV3(root *TreeNode) bool {
+	return isValidBstTraverse(root, nil, nil)
+}
+
+/*
+	思路:
+		1. 每一个节点root, root的整个左子树都要小于root.val，整个右子树都要大于root.val
+		1. 以root为根节点的子树节点必须 max.val > root.val > min.val
+*/
+func isValidBstTraverse(root *TreeNode, min *TreeNode, max *TreeNode) bool {
+	// base case
+	if root == nil {
+		return true
+	}
+
+	// 若 root.val 不符合 max 和 min 的限制，说明不是合法 BST
+	if min != nil && root.Val <= min.Val {
+		return false
+	}
+
+	if max != nil && root.Val >= max.Val {
+		return false
+	}
+
+	// 限制左子树的最大值是 root.val, 右子树的最小值是 root.val
+	return isValidBstTraverse(root.Left, min, root) && isValidBstTraverse(root.Right, root, max)
+}
