@@ -117,8 +117,9 @@ func isValidBSTV3(root *TreeNode) bool {
 
 /*
 	思路:
-		1. 每一个节点root, root的整个左子树都要小于root.val，整个右子树都要大于root.val
-		1. 以root为根节点的子树节点必须 max.val > root.val > min.val
+		1. 根据BST的特性。左边的小于根节点的值，右边的大于根节点的值。并且对于每一棵子树都是如此。
+		2. 所以我们可以直接递归的对左右子树的值与根节点的值进行比较。
+		3. 左子树的值小于当前根节点的值，将当前根节点的值作为最大值传入左子树，左子树的值都小于他，递归处理；右子树的值都大于根节点的值，将根节点的值作为最小值传入右子树，右子树的值都大于他。
 */
 func isValidBstTraverse(root *TreeNode, min *TreeNode, max *TreeNode) bool {
 	// base case
@@ -135,6 +136,6 @@ func isValidBstTraverse(root *TreeNode, min *TreeNode, max *TreeNode) bool {
 		return false
 	}
 
-	// 限制左子树的最大值是 root.val, 右子树的最小值是 root.val
+	// 限制左子树的最大值是 root.val, 右子树的最小值是 root.val，递归处理检查左右子树
 	return isValidBstTraverse(root.Left, min, root) && isValidBstTraverse(root.Right, root, max)
 }
