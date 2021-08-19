@@ -139,3 +139,8 @@ func isValidBstTraverse(root *TreeNode, min *TreeNode, max *TreeNode) bool {
 	// 限制左子树的最大值是 root.val, 右子树的最小值是 root.val，递归处理检查左右子树
 	return isValidBstTraverse(root.Left, min, root) && isValidBstTraverse(root.Right, root, max)
 }
+
+/*
+	判断是否二叉搜索树模板: INT_MIN子树中最小值, INT_MAX子树中最大值
+	is_BST(root, INT_MIN, INT_MAX)
+*/
