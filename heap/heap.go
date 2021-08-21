@@ -42,11 +42,13 @@ func NewMinHeap(heapSize int) *MinHeap {
 }
 
 // 取堆顶元素
+// 复杂度O(1)
 func (h *MinHeap) peek() int {
-	return h.Element[0]
+	return h.Element[1]
 }
 
 // 添加元素
+// 复杂度O(logN)
 func (h *MinHeap) insert(value int) {
 	// 是否大于HeapSize
 	if h.RealSize >= h.HeapSize {
@@ -71,6 +73,7 @@ func (h *MinHeap) insert(value int) {
 }
 
 // 删除堆顶元素
+// 复杂度O(logN)
 func (h *MinHeap) remove() int {
 	// 当前堆元素个数为0，返回
 	if h.RealSize < 1 {
