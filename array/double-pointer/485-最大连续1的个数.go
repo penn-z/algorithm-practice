@@ -30,6 +30,25 @@ func findMaxConsecutiveOnes(nums []int) int {
 	return ans
 }
 
+/*
+	一次遍历:
+		1. 变量a记录当前最大连续1数量，若中断则置零; 变量res记录全局最大连续数
+*/
+
+func findMaxConsecutiveOnesV2(nums []int) int {
+	cnt, maxCnt := 0, 0
+	for _, v := range nums {
+		if v == 1 {
+			cnt++
+		} else {
+			maxCnt = getMax(maxCnt, cnt)
+			cnt = 0
+		}
+	}
+
+	return maxCnt
+}
+
 func getMax(i, j int) int {
 	if i < j {
 		return j
