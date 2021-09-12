@@ -76,7 +76,7 @@ func minWindow(s string, t string) string {
 
 			lEle := string(s[left])
 
-			// 左边界即将右移，若当前左边框字符为目标字符，则需要在windowsMap中减-1
+			// 左边界即将右移，若当前左边框字符为目标字符，则需要在windowsMap中-1
 			if needMap[lEle] > 0 {
 				windowsMap[lEle]--
 				// 若当前左边框字符次数 < 该字符目标次数，则匹配的match次数需要-1
