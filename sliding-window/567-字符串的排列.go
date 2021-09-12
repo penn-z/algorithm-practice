@@ -31,15 +31,18 @@ func main() {
 	// s1 := "abcdxabcde"
 	// s2 := "abcdeabcdx"
 	// s1 := "eidboaoo"
-	s1 := "ab"
-	s2 := "eidbaooo"
-	// s1 := "adc"
-	// s2 := "dcda"
+	// s1 := "ab"
+	// s2 := "eidbaooo"
+	s1 := "adc"
+	s2 := "dcda"
 	// res := checkInclusion(s1, s2)
 	// fmt.Printf("====res:%v\n", res)
 
-	res2 := checkInclusionV2(s1, s2)
-	fmt.Printf("====res:%v\n", res2)
+	// res2 := checkInclusionV2(s1, s2)
+	// fmt.Printf("====res2:%v\n", res2)
+
+	res3 := checkInclusionV3(s1, s2)
+	fmt.Printf("====res3:%v\n", res3)
 }
 
 func checkInclusion(s1 string, s2 string) bool {
@@ -108,6 +111,9 @@ func checkInclusion(s1 string, s2 string) bool {
 		3. 如果窗口已经把s2遍历完仍然没有找到，则返回false
 */
 func checkInclusionV2(s1, s2 string) bool {
+	if len(s1) > len(s2) {
+		return false
+	}
 
 	needMap, windowMap := make(map[string]int), make(map[string]int)
 	for _, word := range s1 {
@@ -146,6 +152,57 @@ func checkInclusionV2(s1, s2 string) bool {
 		if windowMap[lCur] == 0 {
 			delete(windowMap, lCur)
 		}
+
+		// 窗口向右移动
+		left++
+		right++
+	}
+
+	return false
+}
+
+/*
+	思路3：
+		与思路2几乎一样，区别在于map的比较替换为了slice，golang底层可直接比较slice是否相等，不需要用反射
+
+		1. 依然使用滑动窗口，这次固定窗口长度为len(s1)，范围是[left, right]，闭区间；needCounter为s1内字符出现个数的统计，windowCounter为s2内字符出现个数的统计。
+		2. 右移时，需要把右边新加入窗口的字符个数在windowCounter加1，把左边移出窗口的字符的个数减1。如果needCounter == windowCounter，则返回true退出
+		3. 如果窗口已经把s2遍历完仍然没有找到，则返回false
+
+
+*/
+func checkInclusionV3(s1, s2 string) bool {
+	// base case
+	if len(s1) > len(s2) {
+		return false
+	}
+
+	// 初始化大小26的slice，needCounter为s1字符串元素出现个数统计， windowCounter为s2字符串元素出现个数统计， 当前元素byte相对'a'的位置则为slice的索引
+	needCounter, windowCounter := [26]int{}, [26]int{}
+	for _, ch := range s1 {
+		needCounter[ch-'a']++
+	}
+
+	fmt.Printf("needCounter:%v\n", needCounter)
+
+	// 左闭右闭区间[left, right], 长度为len(s1)
+	left, right := 0, len(s1)-1
+	// 先把初始[left, right]放入windowCounter
+	for _, ch := range s2[0:right] {
+		windowCounter[ch-'a']++
+	}
+
+	fmt.Printf("first windowCounter:%v\n", windowCounter)
+
+	for right < len(s2) {
+		// 把新元素放入窗口
+		windowCounter[s2[right]-'a']++
+		if windowCounter == needCounter {
+			return true
+		}
+
+		// 窗口向右移动前，把当前left位置的元素出现次数-1
+		windowCounter[s2[left]-'a']--
 
 		// 窗口向右移动
 		left++
