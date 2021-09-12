@@ -20,17 +20,26 @@
 */
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"reflect"
+)
 
 func main() {
 	// s1 := "abc"
 	// s2 := "ccccbbbbaaaa"
 	// s1 := "abcdxabcde"
 	// s2 := "abcdeabcdx"
+	// s1 := "eidboaoo"
 	s1 := "ab"
-	s2 := "eidboaoo"
-	res := checkInclusion(s1, s2)
-	fmt.Printf("====res:%v", res)
+	s2 := "eidbaooo"
+	// s1 := "adc"
+	// s2 := "dcda"
+	// res := checkInclusion(s1, s2)
+	// fmt.Printf("====res:%v\n", res)
+
+	res2 := checkInclusionV2(s1, s2)
+	fmt.Printf("====res:%v\n", res2)
 }
 
 func checkInclusion(s1 string, s2 string) bool {
@@ -87,6 +96,60 @@ func checkInclusion(s1 string, s2 string) bool {
 			// 左边框右移
 			left++
 		}
+	}
+
+	return false
+}
+
+/*
+	思路2：
+		1. 依然使用滑动窗口，这次固定窗口长度为len(s1)，范围是[left, right]，闭区间；needMap为s1内字符出现个数的统计，windowMap为s2内字符出现个数的统计。
+		2. 右移时，需要把右边新加入窗口的字符个数在windowMap加1，把左边移出窗口的字符的个数减1。如果needMap == windowMap，则返回true退出
+		3. 如果窗口已经把s2遍历完仍然没有找到，则返回false
+*/
+func checkInclusionV2(s1, s2 string) bool {
+
+	needMap, windowMap := make(map[string]int), make(map[string]int)
+	for _, word := range s1 {
+		needMap[string(word)]++
+	}
+
+	fmt.Printf("needMap:%+v\n", needMap)
+
+	// 左闭右闭区间[left, right], 长度为len(s1)
+	left, right := 0, len(s1)-1
+
+	// 先把初始[left, right]放入windowMaps
+	for _, item := range s2[0:right] {
+		word := string(item)
+		windowMap[word]++
+
+	}
+
+	fmt.Printf("first windowsMap:%+v\n", windowMap)
+
+	for right < len(s2) {
+		rCur := string(s2[right])
+		// 把新元素放入窗口
+		windowMap[rCur]++
+		fmt.Printf(">>>>>add right ele, l:%d, r:%d, windowMap:%v\n", left, right, windowMap)
+
+		if reflect.DeepEqual(windowMap, needMap) {
+			// 符合题意
+			return true
+		}
+
+		// 窗口向右移动前，把当前left位置的元素出现次数-1
+		lCur := string(s2[left])
+		windowMap[lCur]--
+		fmt.Printf("<<<<<remove left ele, l:%d, r:%d, windowMap:%v\n", left, right, windowMap)
+		if windowMap[lCur] == 0 {
+			delete(windowMap, lCur)
+		}
+
+		// 窗口向右移动
+		left++
+		right++
 	}
 
 	return false
