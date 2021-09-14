@@ -48,7 +48,7 @@ func lengthOfLongestSubstring(s string) int {
 		rCur := string(s[right])
 		windowMap[rCur]++
 
-		maxLen = getMaxVal(maxLen, len(windowMap))
+		// maxLen = getMaxVal(maxLen, len(windowMap))
 
 		right++
 
@@ -66,6 +66,8 @@ func lengthOfLongestSubstring(s string) int {
 
 			left++
 		}
+
+		maxLen = getMaxVal(maxLen, right-left)
 	}
 
 	return maxLen
