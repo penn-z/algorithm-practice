@@ -52,7 +52,7 @@ func reverseListRecusion(head *ListNode) *ListNode {
 	}
 
 	// 递归处理当前节点的下一个节点，得到处理好的后面节点的反转链表
-	ret := reverseList(head.Next)
+	ret := reverseListRecusion(head.Next)
 
 	// 下一个节点的next指向当前head
 	head.Next.Next = head
