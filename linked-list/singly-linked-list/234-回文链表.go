@@ -1,9 +1,14 @@
 /*
 	leetcode 234: 给你一个单链表的头节点 head ，请你判断该链表是否为回文链表。如果是，返回 true ；否则，返回 false 。
 
-	思路:
-		1. 快慢指针，慢指针一次前进一步，每次把慢指针节点的值放入栈中；快指针一次前进两步。
-		2. 当快指针到达链表末端时, 说明慢指针已到中点，往后慢指针前进，需要把栈顶元素弹出，值与慢指针当前节点的值比较，相等则继续，不相等则返回false退出。
+	思路1: 使用栈特性+快慢指针
+		1. 快慢指针找右中点，慢指针走过的节点值依次入栈
+		2. 找到右中点后，若fast指针指向nil，则原链表节点数为偶数，此时栈顶元素为后半链表第一个节点的值，需要出栈剔除。
+		3. 慢指针继续前进，当前值与栈顶元素比较。
+
+
+	思路2: 使用快慢指针+后半链表翻转比较
+		1. 快慢指针找到后半链表，反转后，再用前后指针向中间移动，比较指针所在节点的值
 
 */
 package main
@@ -21,20 +26,17 @@ func isPalindrome(head *ListNode) bool {
 	// 快慢指针
 	fast, slow := head, head
 	// 维护一个栈，记录前半部分链表的节点值
-	valStack := []int{}
+	valStack := []int{slow.Val}
+	// 中点有两个时，说明链表节点数为偶数，此时取右中点
 	for fast != nil && fast.Next != nil {
-		valStack = append(valStack, slow.Val)
-
 		fast = fast.Next.Next
 		slow = slow.Next
+		valStack = append(valStack, slow.Val)
 	}
 
-	if len(valStack) < 1 {
-		return true
-	}
-
-	if len(valStack)%2 != 0 {
-		slow = slow.Next
+	if fast == nil {
+		// 快指针指向链表尾部nil指针，则链表节点数为偶数，次数删除栈顶一元素即可
+		valStack = valStack[:len(valStack)-1]
 	}
 
 	// 慢指针已到中点
