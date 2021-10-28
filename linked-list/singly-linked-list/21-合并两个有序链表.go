@@ -10,6 +10,14 @@
 			2. 当l1不为空, l2为空时，cur.Next = l1，退出迭代即可
 			3. 当l1为空, l2不为空时, cur.Next = l2, 退出迭代即可
 			4. 最后返回时，因为head为定义的头结点，后面才是题目要求的合并后的有序链表，故而返回head.Next
+
+
+	思路2:
+		递归法
+			终止条件：当两个链表都为空时，表示我们对链表已合并完成。
+			如何递归：我们判断 l1 和 l2 头结点哪个更小，然后较小结点的 next 指针指向其余结点的合并结果。（调用递归）
+
+
 */
 
 package main
@@ -54,4 +62,26 @@ func mergeTwoLists(l1 *ListNode, l2 *ListNode) *ListNode {
 
 	// cur相当于是定义在前面的头结点，最后返回时是不需要该节点的，故而返回head.Next
 	return head.Next
+}
+
+// 递归合并两升序链表
+func mergeTwoListsRecusion(l1 *ListNode, l2 *ListNode) *ListNode {
+	// 终止条件
+	if l1 == nil {
+		return l2
+	}
+
+	if l2 == nil {
+		return l1
+	}
+
+	if l1.Val < l2.Val {
+		// l1头结点当前值小，则next指向 l1链表剩余节点及l2链表合并结果的头结点
+		l1.Next = mergeTwoListsRecusion(l1.Next, l2)
+		return l1
+	} else {
+		// l2头结点当前值小，则next指向 l2链表剩余节点及l1链表合并结果的头结点
+		l2.Next = mergeTwoListsRecusion(l2.Next, l1)
+		return l2
+	}
 }
