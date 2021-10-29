@@ -13,6 +13,12 @@
 		1. 定义个新链表头结点head, cur指向head当前节点,; carrayVal为进位值
 		2. 迭代遍历l1, l2链表，对l1, l2当前指向的链表节点进行相加，得出当前位值，为cur.Val, 进位暂存，到下一位时相加
 		3. 直到l1, l2指向都为空指针，停止迭代
+
+
+	思路2: 递归
+		终止条件: l1, l2一个为空，则返回另一个
+		1. 把两个链表节点的值相加（结果记为 add ）。把 add 模 1010 作为当前的链表节点的值。
+		2. 把两个链表的 next 节点相加。（注意：如果当前相加的结果 add >= 10add>=10，需要把 nextnext 节点相加得到的结果 + 1。）
 */
 package main
 
@@ -76,4 +82,35 @@ func getCurrentAndCarryVal(value1, value2, beforeVal int) (currentVal, carryVal 
 	}
 
 	return
+}
+
+// 两数相加-递归
+/*
+	终止条件: l1, l2一个为空，则返回另一个
+*/
+func addTwoNumbersRecursion(l1 *ListNode, l2 *ListNode) *ListNode {
+	if l1 == nil {
+		return l2
+	}
+
+	if l2 == nil {
+		return l1
+	}
+
+	// logic
+
+	newNode := &ListNode{}
+	// 两节点值相加
+	sum := l1.Val + l2.Val
+
+	// 当前sum % 10得到的结果，即为当前node的val值
+	newNode.Val = sum % 10
+	// 求下一个节点
+	newNode.Next = addTwoNumbersRecursion(l1.Next, l2.Next)
+	// 如果当前两节点sum >= 10，则需要进位补到下一个节点值中
+	if sum >= 10 {
+		newNode.Next = addTwoNumbersRecursion(newNode.Next, &ListNode{Val: 1})
+	}
+
+	return newNode
 }
