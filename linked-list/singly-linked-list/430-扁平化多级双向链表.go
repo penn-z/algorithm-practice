@@ -76,6 +76,43 @@ func getEnd(node *Node) *Node {
 	return node
 }
 
-// func flattenIteration(root *Node) *Node {
+// 思路2： 迭代法
+func flattenIteration(root *Node) *Node {
+	dummy := &Node{}
+	dummy.Next = root
+	cur := dummy.Next
+	for cur != nil {
+		if cur.Child != nil {
+			tmp := cur.Next
+			child := cur.Child
+			// cur下一个节点为child
+			cur.Next = child
+			// child的上一个为cur
+			child.Prev = cur
 
-// }
+			cur.Child = nil // 置空cur.CHild
+
+			// 找出当前cur的尾结点，拼接到原cur.Next后半部分
+			last := cur
+			for last.Next != nil {
+				last = last.Next
+			}
+
+			last.Next = tmp
+			if tmp != nil {
+				// 原cur.Next.Prev拼接上last
+				tmp.Prev = last
+			}
+		}
+
+		/*
+			上诉逻辑中，cur.Child可能成为了cur.Next
+			1. 若是, 则改处复制则是走入原cur.Child
+			2. 若不是，则是cur.Next正常前进
+		*/
+
+		cur = cur.Next
+	}
+
+	return dummy.Next
+}
