@@ -56,7 +56,7 @@ func threeSum(nums []int) [][]int {
 			continue
 		}
 
-		// 去重
+		// 去重， 不能使用nums[i] == nums[i+1]，这样会漏掉类似[-1, -1, 2]这种情况，应当第二次时反过来check前一个元素
 		if i > 0 && nums[i] == nums[i-1] {
 			continue
 		}
