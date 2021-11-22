@@ -80,3 +80,38 @@ func isValid(s string) bool {
 
 	return true
 }
+
+/*
+	换个思路，碰到左括号时，把对应的右括号入栈:
+	1. 遍历字符串
+*/
+func isValidV2(s string) bool {
+	// 定义右括号栈
+	rightStack := []string{}
+	for _, char := range s {
+		// 判断是否左括号，是则把对应的右括号入栈
+		right, ok := bracketsMap[string(char)]
+		if ok {
+			rightStack = append(rightStack, string(right))
+		} else {
+			// 此时为右括号，看是否与栈顶括号相同
+			if len(rightStack) == 0 {
+				// 此时栈为空，说明是孤立的右括号，字符串不合法
+				return false
+			} else if rightStack[len(rightStack)-1] != string(char) {
+				// 栈顶括号不相等，匹配不合法
+				return false
+			} else {
+				// 栈顶右括号相等，则弹出栈顶元素
+				rightStack = rightStack[:len(rightStack)-1]
+			}
+		}
+	}
+
+	// 遍历完成，若此时栈不为空，则说明有孤立的左括号
+	if len(rightStack) > 0 {
+		return false
+	}
+
+	return true
+}
