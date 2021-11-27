@@ -10,13 +10,19 @@
 			 	 数字2找不到下一个更大的数；
 				第二个1的下一个最大的数需要循环搜索，结果也是2。
 
-	思路： 单调栈
+	思路1： 单调栈
 		[1, 2, 1] => [1, 2, 1, 1, 2]
 		1. 根据题意，可以利用单调栈特性，形成一个单调递减的单调栈
 		2. 原数组与 [0:len(arr)-1]拼接成一个新的数组，对此数组进行遍历
 		3. 当栈不为空时，若当前元素>=栈顶元素，则不符合单调递减栈，需要弹出栈顶元素，直到当前元素<栈顶元素位置。
 		4. 栈为空时，说明改元素后面没有比其更大的元素，填充-1，否则填充值为栈顶元素
 			注意，因为数组是拼接的，当前结果数组索引为 i % len(originArr)
+
+
+	思路2：单调栈
+		依然使用单调栈，但与思路1不同的是，我们不需要拼接构造新数组，只是利用循环数组的技巧模拟数组长度翻倍的效果
+		1. 需要注意的是，索引需要对数组长度取模
+
 */
 package main
 
@@ -49,6 +55,34 @@ func nextGreaterElements(nums []int) []int {
 
 		// 当前元素入栈
 		stack = append(stack, newNum[i])
+	}
+
+	return res
+}
+
+func nextGreaterElementsV2(nums []int) []int {
+	lenNums := len(nums)
+	res := make([]int, lenNums, lenNums)
+	if len(nums) == 0 {
+		return res
+	}
+
+	stack := []int{}
+	// 逆序遍历
+	for i := lenNums*2 - 1; i >= 0; i-- {
+		// 索引需要对数组长度取模
+		for len(stack) != 0 && stack[len(stack)-1] <= nums[i%lenNums] {
+			stack = stack[:len(stack)-1]
+		}
+
+		if len(stack) == 0 {
+			res[i%lenNums] = -1
+		} else {
+			res[i%lenNums] = stack[len(stack)-1]
+		}
+
+		// 当前元素入栈
+		stack = append(stack, nums[i%lenNums])
 	}
 
 	return res
