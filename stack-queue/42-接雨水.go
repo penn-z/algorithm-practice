@@ -20,13 +20,21 @@
 			b. 将当前柱子索引入栈(经过a的循环，到此处是满足单调递减栈的)
 			c. i继续移动
 
+	思路2: 暴力解法
+		对于数组中的每个元素，找出水能达到的最高位置，等于两边最大高度的较小值减去当前高度值。
+
+
 
 */
 
 package main
 
-func main() {
+import "fmt"
 
+func main() {
+	height := []int{0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1}
+	resV2 := trapV2(height)
+	fmt.Println("resV2: ", resV2)
 }
 
 func trap(height []int) int {
@@ -68,6 +76,41 @@ func trap(height []int) int {
 
 func minNum(x, y int) int {
 	if x < y {
+		return x
+	}
+
+	return y
+}
+
+// 思路2：暴力解法
+func trapV2(height []int) int {
+	var res int
+	if len(height) == 0 {
+		return res
+	}
+
+	for i, _ := range height {
+		// 初始化左右高度的最大值left_max, right_max
+		var left_max, right_max int = 0, 0
+		// 左边柱子最大值
+		for j := i; j >= 0; j-- {
+			left_max = maxNum(left_max, height[j])
+		}
+
+		// 右边柱子最大值
+		for j := i; j <= len(height)-1; j++ {
+			right_max = maxNum(right_max, height[j])
+		}
+
+		// 当前积水量加入结果中
+		res += minNum(left_max, right_max) - height[i]
+	}
+
+	return res
+}
+
+func maxNum(x, y int) int {
+	if x > y {
 		return x
 	}
 
