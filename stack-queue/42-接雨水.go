@@ -24,6 +24,9 @@
 		对于数组中的每个元素，找出水能达到的最高位置，等于两边最大高度的较小值减去当前高度值。
 
 
+	思路3: 暴力解法+备忘录优化 = 动态规划
+		1. 对于思路2， 每次对需要求出height[i]左右柱子left_max, right_max最大值，可以考虑用map存储下来结果，方便后续直接使用
+
 
 */
 
@@ -115,4 +118,34 @@ func maxNum(x, y int) int {
 	}
 
 	return y
+}
+
+// 思路3: 暴力解法+备忘录优化 = 动态规划
+func trapV3(height []int) int {
+	var res int
+	if len(height) == 0 {
+		return res
+	}
+
+	height_len := len(height)
+	// 初始化left_max, right_max数组
+	left_max_arr := make([]int, height_len, height_len)
+	right_max_arr := make([]int, height_len, height_len)
+
+	left_max_arr[0] = height[0]
+	for i := 1; i < height_len; i++ {
+		left_max_arr[i] = maxNum(left_max_arr[i-1], height[i])
+	}
+
+	right_max_arr[height_len-1] = height[height_len-1]
+	for i := height_len - 2; i >= 0; i-- {
+		right_max_arr[i] = maxNum(right_max_arr[i+1], height[i])
+	}
+
+	// 遍历height，求积水量
+	for i, _ := range height {
+		res += minNum(left_max_arr[i], right_max_arr[i]) - height[i]
+	}
+
+	return res
 }
