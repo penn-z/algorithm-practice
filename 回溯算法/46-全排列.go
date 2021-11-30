@@ -33,7 +33,7 @@ func permute(nums []int) [][]int {
 
 	// 记录结果路径
 	path := []int{}
-	// 记录当前路径是否适用过
+	// 记录当前路径是否适用过， map[index]bool
 	used := make(map[int]bool)
 	backtrack(nums, path, used)
 	return res
@@ -50,16 +50,16 @@ func backtrack(nums, path []int, used map[int]bool) {
 		return
 	}
 
-	for _, num := range nums {
+	for i, num := range nums {
 		// 排除不合法的选择
-		if used[num] {
+		if used[i] {
 			continue
 		}
 
 		// 做选择
 
 		// 将该选择从选择列表移除
-		used[num] = true
+		used[i] = true
 		// 路径.add(选择)
 		path = append(path, num)
 
@@ -69,7 +69,7 @@ func backtrack(nums, path []int, used map[int]bool) {
 		// 回撤取消选择
 		path = path[:len(path)-1]
 		// 将该选择再加入选择列表
-		used[num] = false
+		used[i] = false
 	}
 
 	return
