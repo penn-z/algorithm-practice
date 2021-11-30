@@ -20,6 +20,11 @@
 	思路1: 二分查找
 		1. 遍历外层
 		2. 遍历内层，二分查找
+
+
+	思路2: BST搜索
+		1. 从右上作为起点，向左方、下方开始搜索，可发现是一颗BST树
+		2. 利用BST特点，当前节点比左孩子节点大，比右孩子节点小，往左下搜索
 */
 package main
 
@@ -49,6 +54,32 @@ func searchMatrix(matrix [][]int, target int) bool {
 				// 右边界左移
 				right = mid - 1
 			}
+		}
+	}
+
+	return false
+}
+
+func searchMatrixV2(matrix [][]int, target int) bool {
+	if len(matrix) == 0 {
+		return false
+	}
+
+	if len(matrix[0]) == 0 {
+		return false
+	}
+
+	m, n := len(matrix), len(matrix[0])
+	left, right := n-1, 0
+	for left >= 0 && right < m {
+		if matrix[right][left] < target {
+			// 指针向下移
+			right++
+		} else if matrix[right][left] > target {
+			// 指针向左移
+			left--
+		} else {
+			return true
 		}
 	}
 
