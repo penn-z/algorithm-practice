@@ -40,6 +40,29 @@ func maxProfit(prices []int) int {
 	return maxProfit
 }
 
+/**
+思路2: 遍历数组
+1. 定义最小值变量minPrice，最大利润变量profit
+2. 遍历数组，每次判断是否需要更新minPrice，不用的话则求出profit
+
+*/
+func maxProfixV2(prices []int) int {
+	if len(prices) <= 1 {
+		return 0
+	}
+
+	minPrice, profit := int(^uint(0)>>1), 0
+	for i := 0; i < len(prices); i++ {
+		if minPrice > prices[i] {
+			minPrice = prices[i]
+		} else {
+			profit = max(profit, prices[i]-minPrice)
+		}
+	}
+
+	return profit
+}
+
 func max(x, y int) int {
 	if x > y {
 		return x
