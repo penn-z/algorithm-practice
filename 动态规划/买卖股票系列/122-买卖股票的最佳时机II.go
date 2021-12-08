@@ -22,6 +22,55 @@ func main() {
 }
 
 /**
+思路: 动态规划
+*/
+func maxProfit(prices []int) int {
+	if len(prices) <= 1 {
+		return 0
+	}
+
+	/**
+	1. 确定dp数组及其下标含义
+	dp[i][j]为第i天，是否持有股票，j取值范围[0, 1]
+	*/
+	dp := make([][]int, len(prices))
+	for i := 0; i < len(prices); i++ {
+		dp[i] = make([]int, 2)
+	}
+
+	/**
+	2. 确定递推公式
+	未持有股票时:
+		dp[i][0] = max(dp[i-1][0], dp[i-1][1]+prices[i])  (不动，卖出)
+	持有股票时:
+		dp[i][1] = max(dp[i-1][1], dp[i-1][0]-prices[i])  (不动，买入)
+	*/
+
+	// 3. 初始化dp数组
+	dp[0][0] = 0
+	dp[0][1] = -prices[0]
+
+	// 4. 确定遍历顺序
+	for i := 1; i < len(prices); i++ {
+		// 未持有股票
+		dp[i][0] = max(dp[i-1][0], dp[i-1][1]+prices[i]) // (不动，卖出)
+		// 持有股票
+		dp[i][1] = max(dp[i-1][1], dp[i-1][0]-prices[i]) // (不动，买入)
+	}
+
+	// 最终结果
+	return dp[len(prices)-1][0]
+}
+
+func max(x, y int) int {
+	if x > y {
+		return x
+	}
+
+	return y
+}
+
+/**
 思路: 贪心算法，遍历数组
 1. 因为可以无限次买入卖出，则只要发现当前元素比上一个元素大，则卖出；比下一个元素小，则买入，以此达到收益最大化
 2. 设tmp 为第i-1日买入与第i日卖出赚取的利润，即tmp = prices[i] - prices[i-1]
