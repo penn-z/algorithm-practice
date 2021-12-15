@@ -112,3 +112,61 @@ func lengthOfLongestSubstringV2(s string) int {
 
 	return max
 }
+
+// 滑动窗口
+/**
+1. 维护滑动窗口windowMap; left, right为窗口左右边界指针；maxLen为最长无重复子串长度
+2. 右边界右移，新元素加入windowMap;若新元素已存在于窗口中，则窗口左边界左移，直至右边界元素出现次数为1;
+3. 右边界移动过程中不断记录窗口长度
+
+*/
+func lengthOfLongestSubstringV3(s string) int {
+	if len(s) == 0 {
+		return 0
+	}
+
+	windows := make(map[string]int)
+	left, right, maxLen := 0, 0, 0
+	for right < len(s) {
+		// 元素放入窗口
+		rCur := string(s[right])
+
+		// 右移窗口
+		right++
+
+		// 进行窗口一系列数据更新
+		windows[rCur]++
+
+		// debug
+
+		// 判断做窗口是否要收缩
+		for windows[rCur] > 1 {
+			// 左边界元素逻辑
+			lCur := string(s[left])
+
+			// 进行窗口内数据更新
+			if windows[lCur] > 0 {
+				windows[lCur]--
+
+				if windows[lCur] == 0 {
+					delete(windows, lCur)
+				}
+			}
+
+			// 左移窗口
+			left++
+		}
+
+		maxLen = max(maxLen, len(windows))
+	}
+
+	return maxLen
+}
+
+func max(x, y int) int {
+	if x > y {
+		return x
+	}
+
+	return y
+}
