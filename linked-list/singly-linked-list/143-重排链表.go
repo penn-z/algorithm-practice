@@ -69,3 +69,37 @@ func reorderList(head *ListNode) {
 
 	return
 }
+
+/**
+slice记录链表，
+然后定义快慢指针i, j，按规律从slice中取出node连接
+*/
+func reorderListV2(head *ListNode) {
+	if head == nil {
+		return
+	}
+
+	// 用slice存储链表
+	nodeSlice := []*ListNode{}
+	for cur := head; cur != nil; cur = cur.Next {
+		nodeSlice = append(nodeSlice, cur)
+	}
+
+	// 双指针，按规律连接链表
+	i, j := 0, len(nodeSlice)-1
+	for i < j {
+		nodeSlice[i].Next = nodeSlice[j]
+		i++
+		if i == j {
+			break
+		}
+
+		nodeSlice[j].Next = nodeSlice[i]
+		j--
+	}
+
+	// 需要把中间结点Next置0，否则会循环
+	nodeSlice[i].Next = nil
+
+	return
+}
