@@ -33,8 +33,9 @@ func quickSort(arr []int, left, right int) {
 	}
 
 	// 将数组分区，并获得中间值的下标
-	middleIndex := partition(arr, left, right)
+	// middleIndex := partition(arr, left, right)
 	// middleIndex := randomPartition(arr, left, right)
+	middleIndex := partitionV2(arr, left, right)
 
 	// 对左区域快速排序
 	quickSort(arr, left, middleIndex-1)
@@ -67,6 +68,30 @@ func partition(arr []int, left, right int) int {
 	// 最后需要把pivot与 arr[left]交换位置 (arr[left]是最后一个小于pivot的元素)
 	arr[pivotIndex], arr[left] = arr[left], arr[pivotIndex]
 	return left
+}
+
+// 选择排序的划分区间思想，划分为『比pivot小的元素区间』与『比pivot大的元素区间』
+func partitionV2(arr []int, left, right int) int {
+	// 基准pivot左边的元素比其小，右边的元素比其大
+	// 选择最后一个元素为基准
+	// 利用选怎排序的思想，将arr[left....right-1]分为『比pivot小元素区间』与『比pivot大元素区间』
+
+	// 选择基准
+	pivot := arr[right]
+
+	i := left
+	for j := left; j <= right-1; j++ {
+		// 如果当前 『比pivot大元素区间』的j元素小于pivot，则需要交换i, j
+		if arr[j] < pivot {
+			arr[i], arr[j] = arr[j], arr[i]
+			// 『比pivot小元素区间』向右扩张1，刚好至『比pivot大的元素区间』
+			i = i + 1
+		}
+	}
+
+	// 最后需要把基准元素与i置换，因为此时i恰好在第一个比pivot大的元素索引位置，也即『比pivot大的元素区间』初始位置
+	arr[i], arr[right] = arr[right], arr[i]
+	return i
 }
 
 // 随机数优化
