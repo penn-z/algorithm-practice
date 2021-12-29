@@ -39,7 +39,10 @@ func main() {
 	}
 
 	res := preorderTree(root)
-	fmt.Println("递归前序遍历: ", res)
+	fmt.Println("前序遍历-递归: ", res)
+
+	res = preorderTreeIterate(root)
+	fmt.Println("前序遍历-迭代: ", res)
 
 }
 
@@ -64,5 +67,38 @@ func preorderTree(root *TreeNode) (vals []int) {
 	}
 
 	preorder(root)
+	return
+}
+
+// 迭代法
+/*
+	维护一个栈，先加入右孩子节点，再加入左孩子节点，最后加入根节点。
+	则出栈时的顺序为 中 -> 左 -> 右
+*/
+func preorderTreeIterate(root *TreeNode) (vals []int) {
+	stack := []*TreeNode{}
+
+	// 根节点入栈
+	stack = append(stack, root)
+	for len(stack) > 0 {
+		// 栈顶元素出栈
+		top := stack[len(stack)-1]
+		if top != nil {
+			vals = append(vals, top.Val)
+		}
+
+		stack = stack[:len(stack)-1]
+
+		// 右孩子节点入栈
+		if top.Right != nil {
+			stack = append(stack, top.Right)
+		}
+
+		// 左孩子节点入栈
+		if top.Left != nil {
+			stack = append(stack, top.Left)
+		}
+	}
+
 	return
 }
