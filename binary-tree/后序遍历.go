@@ -39,7 +39,9 @@ func main() {
 	}
 
 	res := suborderTree(root)
-	fmt.Println("递归后序遍历: ", res)
+	fmt.Println("后序遍历-递归: ", res)
+	res = suborderTreeIterate(root)
+	fmt.Println("后序遍历-迭代: ", res)
 }
 
 func suborderTree(root *TreeNode) (vals []int) {
@@ -61,4 +63,47 @@ func suborderTree(root *TreeNode) (vals []int) {
 
 	suborder(root)
 	return vals
+}
+
+// 迭代法
+/*
+	前序遍历顺序是 中->左->右
+	后续遍历是 左->右->中
+	则可以在修改前序遍历得 中->右->左，然后翻转数组即可
+*/
+func suborderTreeIterate(root *TreeNode) (vals []int) {
+	if root == nil {
+		return
+	}
+
+	// 栈记录节点
+	stack := []*TreeNode{}
+	// 根节点入栈
+	stack = append(stack, root)
+	for len(stack) > 0 {
+		// 栈顶元素出栈
+		top := stack[len(stack)-1]
+		stack = stack[:len(stack)-1]
+		// 中
+		vals = append(vals, top.Val)
+
+		// 左孩子入栈
+		if top.Left != nil {
+			stack = append(stack, top.Left)
+		}
+
+		// 右孩子入栈
+		if top.Right != nil {
+			stack = append(stack, top.Right)
+		}
+	}
+
+	// 翻转数组
+	for i, j := 0, len(vals)-1; i < j; {
+		vals[i], vals[j] = vals[j], vals[i]
+		i++
+		j--
+	}
+
+	return
 }
