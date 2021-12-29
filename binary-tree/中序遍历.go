@@ -40,6 +40,9 @@ func main() {
 
 	res := midorderTree(root)
 	fmt.Println("递归中序遍历: ", res)
+
+	res = midorderTreeIterate(root)
+	fmt.Println("中序遍历-递归: ", res)
 }
 
 func midorderTree(root *TreeNode) (vals []int) {
@@ -61,4 +64,37 @@ func midorderTree(root *TreeNode) (vals []int) {
 
 	midorder(root)
 	return vals
+}
+
+// 迭代法
+/*
+	1. 定义指针访问树节点，栈则处理节点上的元素
+*/
+func midorderTreeIterate(root *TreeNode) (vals []int) {
+	if root == nil {
+		return
+	}
+
+	stack := []*TreeNode{}
+	// 访问树节点的指针
+	cur := root
+	for cur != nil || len(stack) > 0 {
+		// 指针访问到最底层
+		for cur != nil {
+			stack = append(stack, cur)
+			cur = cur.Left // 左
+		}
+
+		// 栈顶元素出栈
+		top := stack[len(stack)-1]
+		stack = stack[:len(stack)-1]
+		// 加入到结果集中
+		vals = append(vals, top.Val) // 中
+
+		// 处理完了最左节点，指针遍历右结点
+		cur = top.Right // 右
+
+	}
+
+	return
 }
