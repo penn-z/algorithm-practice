@@ -33,9 +33,9 @@ func quickSort(arr []int, left, right int) {
 	}
 
 	// 将数组分区，并获得中间值的下标
-	// middleIndex := partition(arr, left, right)
+	middleIndex := partition(arr, left, right)
 	// middleIndex := randomPartition(arr, left, right)
-	middleIndex := partitionV2(arr, left, right)
+	// middleIndex := partitionV2(arr, left, right)
 
 	// 对左区域快速排序
 	quickSort(arr, left, middleIndex-1)
@@ -45,29 +45,30 @@ func quickSort(arr []int, left, right int) {
 
 }
 
-// 将arr 从 left 到 right 分区，左边区域比基数小，右边区域比基数大，然后返回中间值下标
-func partition(arr []int, left, right int) int {
+func partition(nums []int, start, end int) int {
 	// 取第一个数为基数
-	pivot, pivotIndex := arr[left], left
+	// pivot, pivotIndex := arr[left], left
+	pivot := nums[start]
 
-	for left < right {
+	for start < end {
 		// 从右往左找到第一个小于pivot的元素
-		for left < right && arr[right] >= pivot {
-			right--
+		for start < end && nums[end] >= pivot {
+			end--
 		}
+
+		nums[start] = nums[end] // 放到start位置
 
 		// 从左往右找到第一个大于pivot的元素
-		for left < right && arr[left] <= pivot {
-			left++
+		for start < end && nums[start] <= pivot {
+			start++
 		}
 
-		// 此时arr[left]大于pivot, arr[right]小于pivot，交换位置
-		arr[left], arr[right] = arr[right], arr[left]
+		nums[end] = nums[start] // 放到end位置
 	}
 
-	// 最后需要把pivot与 arr[left]交换位置 (arr[left]是最后一个小于pivot的元素)
-	arr[pivotIndex], arr[left] = arr[left], arr[pivotIndex]
-	return left
+	//最后基准放到start的位置，此时nums[]start]空了
+	nums[start] = pivot
+	return start
 }
 
 // 选择排序的划分区间思想，划分为『比pivot小的元素区间』与『比pivot大的元素区间』
