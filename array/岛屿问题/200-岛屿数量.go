@@ -42,10 +42,12 @@ func main() {
 		{'1', '1', '0', '0', '0'},
 		{'0', '0', '0', '0', '0'},
 	}
-	res := numIslands(grid)
+	// res := numIslands(grid)
+	res := numIslandsV2(grid)
 	fmt.Println("res: ", res)
 }
 
+// 思路1: DFS递归
 func numIslands(grid [][]byte) int {
 	res := 0
 
@@ -86,4 +88,49 @@ func dfs(grid [][]byte, r, c int) {
 	dfs(grid, r+1, c) // 下
 	dfs(grid, r, c-1) // 左
 	dfs(grid, r, c+1) // 右
+}
+
+// 思路2: BFS
+func numIslandsV2(grid [][]byte) int {
+	res := 0
+	m, n := len(grid), len(grid[0])
+	for i := 0; i < m; i++ {
+		for j := 0; j < n; j++ {
+			if grid[i][j] == '1' {
+				res++
+				bfs(grid, i, j)
+			}
+		}
+	}
+
+	return res
+}
+
+// 深度优先遍历
+func bfs(grid [][]byte, r, c int) {
+	queue := [][]int{}
+	queue = append(queue, []int{r, c})
+	for len(queue) > 0 {
+		// 队头元素出队
+		head := queue[0]
+		queue = queue[1:]
+		i, j := head[0], head[1]
+		// 越界
+		if i < 0 || j < 0 || i >= len(grid) || j >= len(grid[0]) {
+			continue
+		}
+
+		if grid[i][j] != '1' {
+			continue
+		}
+
+		grid[i][j] = '2' // 标记为岛屿(已访问)
+		// 上下左右网格入队
+		queue = append(queue,
+			[]int{i - 1, j},
+			[]int{i + 1, j},
+			[]int{i, j - 1},
+			[]int{i, j + 1},
+		)
+	}
 }
