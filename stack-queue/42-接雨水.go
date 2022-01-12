@@ -85,33 +85,6 @@ func minNum(x, y int) int {
 	return y
 }
 
-// 思路2：暴力解法
-func trapV2(height []int) int {
-	var res int
-	if len(height) == 0 {
-		return res
-	}
-
-	for i, _ := range height {
-		// 初始化左右高度的最大值left_max, right_max
-		var left_max, right_max int = 0, 0
-		// 左边柱子最大值
-		for j := i; j >= 0; j-- {
-			left_max = maxNum(left_max, height[j])
-		}
-
-		// 右边柱子最大值
-		for j := i; j <= len(height)-1; j++ {
-			right_max = maxNum(right_max, height[j])
-		}
-
-		// 当前积水量加入结果中
-		res += minNum(left_max, right_max) - height[i]
-	}
-
-	return res
-}
-
 func maxNum(x, y int) int {
 	if x > y {
 		return x
@@ -120,31 +93,63 @@ func maxNum(x, y int) int {
 	return y
 }
 
-// 思路3: 暴力解法+备忘录优化 = 动态规划
+// trapV4, 暴力求解
+func trapV2(height []int) int {
+	res := 0
+	if len(height) <= 1 {
+		return 0
+	}
+
+	// 暴力求解
+	for i := range height {
+		// 定义变量记录左右边界最大值
+		leftMax, rightMax := 0, 0
+
+		// 左边柱子最大值
+		for j := i; j >= 0; j-- {
+			leftMax = maxNum(leftMax, height[j])
+		}
+
+		// 右边柱子最大值
+		for j := i; j < len(height); j++ {
+			rightMax = maxNum(rightMax, height[j])
+		}
+
+		// 面积累加，这里要求右边最大边界中较小的边界，才是可以蓄水的边界
+		res += minNum(leftMax, rightMax) - height[i]
+	}
+
+	return res
+}
+
+// 暴力求解 + 备忘录
 func trapV3(height []int) int {
-	var res int
-	if len(height) == 0 {
+	// 基于暴力求值，每次都需要求解height[i]左右最高边界，那么可以实现先把height[i]左右边界最大值求解出来
+
+	res := 0
+	if len(height) <= 1 {
 		return res
 	}
 
-	height_len := len(height)
-	// 初始化left_max, right_max数组
-	left_max_arr := make([]int, height_len, height_len)
-	right_max_arr := make([]int, height_len, height_len)
+	leftMaxArr, rightMaxArr := make([]int, len(height)), make([]int, len(height))
+	// 需要注意的时，每个height[i]左边界最大值，需要从左向右遍历求得
+	// 每个height[i]右边界最大值，需要从右往左遍历求得
 
-	left_max_arr[0] = height[0]
-	for i := 1; i < height_len; i++ {
-		left_max_arr[i] = maxNum(left_max_arr[i-1], height[i])
+	leftMaxArr[0] = height[0]
+	// 从左往右遍历，求height左边最大边界
+	for i := 1; i < len(height); i++ {
+		leftMaxArr[i] = maxNum(leftMaxArr[i-1], height[i])
 	}
 
-	right_max_arr[height_len-1] = height[height_len-1]
-	for i := height_len - 2; i >= 0; i-- {
-		right_max_arr[i] = maxNum(right_max_arr[i+1], height[i])
+	rightMaxArr[len(height)-1] = height[len(height)-1]
+	// 从右往左遍历，求height右边最大边界
+	for i := len(height) - 2; i >= 0; i-- {
+		rightMaxArr[i] = maxNum(rightMaxArr[i+1], height[i])
 	}
 
-	// 遍历height，求积水量
-	for i, _ := range height {
-		res += minNum(left_max_arr[i], right_max_arr[i]) - height[i]
+	// 计算每个柱子可蓄水量
+	for i := range height {
+		res += minNum(leftMaxArr[i], rightMaxArr[i]) - height[i]
 	}
 
 	return res
