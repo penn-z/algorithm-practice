@@ -10,37 +10,35 @@ func main() {
 }
 
 // 动态规划
-func lengthOfLIS(nums []int) int {
-	if len(nums) <= 1 {
-		return len(nums)
+func lengthOfLISV2(nums []int) int {
+	res := 0
+	if len(nums) == 0 {
+		return res
 	}
 
-	// 1. 确定dp数组及其下标含义
-	/*
-	   dp[i]表示数组nums在下标为i时的最长递增子序列(可以不连续)
-	*/
+	// 1. 确定dp[i]数组及下标含义
 
 	// 2. 确定递推公式
 	/*
-	   dp[i] = max{dp[0], dp[1], ... dp[i-1]} + 1
+		dp[i]表示以nums[i]结尾的最大上升子序列
+		则 dp[i] = max(dp[j]+1)，其中 0 <= j <= i-1， nums[j] < nums[i]
 	*/
-	dp := make([]int, len(nums))
 
-	// 3. dp数组初始化
-	for i := range dp {
-		// 初始状态下，每个元素至少是长度为1的递增子序列
+	// 3. dp初始化
+	dp := make([]int, len(nums))
+	for i := 0; i < len(nums); i++ {
+		// 至少是其本身长度
 		dp[i] = 1
 	}
 
 	// 4. 确定遍历顺序
 	/*
-	   for i : 1 -> (lenNums-1):
-	       for j : 0 -> i-1 :
-	           TODO
+		for i : 0 -> len(nums):
+			for j : 0 -> i-1:
 	*/
-	for i := 1; i < len(nums); i++ {
+	for i := 0; i < len(nums); i++ {
 		for j := 0; j <= i-1; j++ {
-			// 严格递增
+			// 可以组成以nums[i]结尾的最长上升子序列
 			if nums[i] > nums[j] {
 				// max{dp[0], dp[1], ... dp[i-1]} + 1, 这里遍历j时，每次与dp[i]比较，取较大值赋值后重新赋值给dp[i]
 				dp[i] = max(dp[i], dp[j]+1)
@@ -48,10 +46,10 @@ func lengthOfLIS(nums []int) int {
 		}
 	}
 
-	// 最终结果
-	res := 0
 	for i := range dp {
-		res = max(res, dp[i])
+		if res < dp[i] {
+			res = dp[i]
+		}
 	}
 
 	return res
