@@ -47,7 +47,6 @@ func quickSort(arr []int, left, right int) {
 
 func partition(nums []int, start, end int) int {
 	// 取第一个数为基数
-	// pivot, pivotIndex := arr[left], left
 	pivot := nums[start]
 
 	for start < end {
@@ -56,17 +55,20 @@ func partition(nums []int, start, end int) int {
 			end--
 		}
 
-		nums[start] = nums[end] // 放到start位置
+		// 找到后放到nums[start]位置
+		nums[start] = nums[end]
 
-		// 从左往右找到第一个大于pivot的元素
+		// 从左往右找第一个大于pivot的元素
 		for start < end && nums[start] <= pivot {
 			start++
 		}
 
-		nums[end] = nums[start] // 放到end位置
+		// 找到后放到nums[end]位置
+		nums[end] = nums[start]
 	}
 
-	//最后基准放到start的位置，此时nums[]start]空了
+	// 最后start, end相遇时，左边的元素小于pivot, 右边元素大于pivot
+	// 此时start指针的元素应该被替换掉为pivot值，因为已经被置换到后半部分了
 	nums[start] = pivot
 	return start
 }
