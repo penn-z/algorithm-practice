@@ -40,3 +40,24 @@ func deleteDuplicates(head *ListNode) *ListNode {
 
 	return head
 }
+
+// 快慢指针，fast每次前进1步探路，如果与slow不相同(及元素不重复)，则slow前进至fast指针处
+func deleteDuplicatesV2(head *ListNode) *ListNode {
+	if head == nil {
+		return nil
+	}
+
+	slow, fast := head, head
+	for fast != nil {
+		if fast.Val != slow.Val {
+			slow.Next = fast
+			slow = slow.Next
+		}
+
+		fast = fast.Next
+	}
+
+	// slow断开与后面重复元素的连接
+	slow.Next = nil
+	return head
+}
