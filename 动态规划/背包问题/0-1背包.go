@@ -30,7 +30,8 @@ import "fmt"
 func main() {
 	weight := []int{1, 3, 4}
 	value := []int{15, 20, 30}
-	res := package0_1(weight, value, 4)
+	// res := package0_1(weight, value, 4)
+	res := package0_1_compress(weight, value, 4)
 	fmt.Println("res: ", res)
 }
 
@@ -107,6 +108,58 @@ func package0_1(weight, value []int, bagWeight int) int {
 	}
 
 	return dp[len(weight)-1][bagWeight]
+}
+
+// 0_1背包状态压缩，二维数组压缩为一维数组
+func package0_1_compress(weight, value []int, bagWeight int) int {
+	if len(weight) == 0 {
+		return 0
+	}
+
+	if bagWeight == 0 {
+		return 0
+	}
+
+	/*
+		对于二维数组dp[i][j]，dp[i][j] = max{dp[i-1][j], dp[i-1][j - weight[i]] + value[i]}
+		发现如果把dp[i-1]这一层拷贝到dp[i]这一层上，dp[i-1]可以不再使用，则 dp[i][j] = max{dp[i][j], dp[i][j - weight[i]] + value[i]}，
+		发现其实i这一维完全可以不用使用，直接压缩为dp[j]一维滚动数组即可。
+
+		这个滚动数组，满足的条件是上一层可以重复利用，直接拷贝到当前层！！！
+
+		1. 则在dp[j]中，含义为容量为j的背包，所背的物品总价值最大值为dp[j]。
+
+		2. 递推公式
+			dp[j] = max{
+				d[j], // 不放物品i
+				dp[j - weight[i]] + value[i],  // 放置物品i
+			}
+
+		3. dp初始化
+			由dp[j] = max{dp[j], dp[j - weight[i]] + value[i]} 可得知dp推导过程中一定是取价值最大的数，故dp[j]所有下标对应的dp值都为0即可
+
+		4. 确定遍历顺序
+			需要从后往前倒序遍历，是为了保证物品i只被放入一次！如果一旦正序遍历了，那么物品0就会被重复加入多次！
+
+			为什么二维数组dp[i][j]不需要倒序遍历呢？因为对于二维数组dp，dp[i][j]都是通过上一层dp[i-1][j]计算得来，本层的dp[i][j]并不会被覆盖！
+	*/
+
+	dp := make([]int, bagWeight+1)
+
+	// 递推公式 dp[j] = max(dp[j], dp[j - weight[i]] + value[i])
+
+	// dp各元素值初始化为0即可
+
+	// 倒序遍历dp[j]，防止覆盖
+	for i := 0; i < len(weight); i++ {
+		for j := bagWeight; j >= weight[i]; j-- {
+			dp[j] = max(dp[j], dp[j-weight[i]]+value[i])
+		}
+	}
+
+	fmt.Println("dp: ", dp)
+
+	return dp[bagWeight]
 }
 
 func max(x, y int) int {
