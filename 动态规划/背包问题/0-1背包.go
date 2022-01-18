@@ -150,8 +150,8 @@ func package0_1_compress(weight, value []int, bagWeight int) int {
 
 	// dp各元素值初始化为0即可
 
-	// 倒序遍历dp[j]，防止覆盖
 	for i := 0; i < len(weight); i++ {
+		// 倒序遍历dp[j]，防止覆盖
 		for j := bagWeight; j >= weight[i]; j-- {
 			dp[j] = max(dp[j], dp[j-weight[i]]+value[i])
 		}
