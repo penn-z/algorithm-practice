@@ -20,9 +20,11 @@ package main
 import "fmt"
 
 func main() {
-	nums := []int{1, 5, 11, 5}
+	nums := []int{1, 5, 11, 7, 4}
 	res := canPartition(nums)
 	fmt.Println("res:", res)
+	resV2 := canPartitionNotCompress(nums)
+	fmt.Println("resV2:", resV2)
 }
 
 func canPartition(nums []int) bool {
@@ -71,7 +73,7 @@ func canPartition(nums []int) bool {
 		}
 	}
 
-	fmt.Println("dp: ", dp)
+	fmt.Println("v1 dp: ", dp)
 
 	// 集合中的元素正好可以凑成总和target
 	if dp[target] == target {
@@ -79,6 +81,70 @@ func canPartition(nums []int) bool {
 	}
 
 	return false
+}
+
+// 0-1背包，二维状态不压缩
+func canPartitionNotCompress(nums []int) bool {
+	if len(nums) == 0 {
+		return false
+	}
+
+	/*
+		给一个容量为sum/2的背包，n个物品，每个物品的重量为nums[i]。现在装物品，是否存在一种装法，能够恰好装满背包？
+
+		1. dp[i][j] = boolean表示，对于前i个物品，当前背包容量为j时，若dp[i][j] = true，则说明背包恰好可以装满，若dp[i][j] = false，说明不能恰好装满背包。
+
+		2. 递推公式
+			dp[i][j] = max {
+				dp[i-1][j],	// 无法装入物品i
+				dp[i-1][j - nums[i]], // 可以装入物品i，恰好装满背包
+			}
+
+		3. dp初始化
+			dp[...][0] = true，表示背包没有空间时，已经装满
+			dp[0][...] = false，当没有物品可以选择时，没办法装满背包
+
+		4. 遍历顺序
+			// 先遍历物品
+				// 后遍历背包
+	*/
+
+	sum := 0
+	for i := range nums {
+		sum += nums[i]
+	}
+
+	if sum%2 != 0 {
+		return false
+	}
+
+	target := sum / 2
+
+	dp := make([][]bool, len(nums))
+	for i := range dp {
+		dp[i] = make([]bool, target+1)
+	}
+
+	// 初始化
+	for i := 0; i < len(nums); i++ {
+		// 背包没有空间，已经恰好装满
+		dp[i][0] = true
+	}
+
+	for i := 1; i < len(nums); i++ {
+		for j := 1; j <= target; j++ {
+			// 背包容量不足，不能装入第i个物品
+			if j-nums[i] < 0 {
+				dp[i][j] = dp[i-1][j]
+			} else {
+				dp[i][j] = dp[i-1][j] || dp[i-1][j-nums[i]]
+			}
+		}
+	}
+
+	fmt.Println("v2 dp: ", dp)
+
+	return dp[len(nums)-1][target]
 }
 
 func max(x, y int) int {
