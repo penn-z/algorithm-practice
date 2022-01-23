@@ -5,6 +5,8 @@
 */
 package main
 
+import "fmt"
+
 type TreeNode struct {
 	Val   int
 	Left  *TreeNode
@@ -12,7 +14,9 @@ type TreeNode struct {
 }
 
 func main() {
-
+	n := 5
+	res := numTreesV2(n)
+	fmt.Println("res: ", res)
 }
 
 var memo [][]int
@@ -50,4 +54,29 @@ func count(lowest, highest int) int {
 
 	memo[lowest][highest] = res
 	return res
+}
+
+func numTreesV2(n int) int {
+	// 初始化memo
+	memo := make([]int, n+1)
+	return helper(n, &memo)
+}
+
+func helper(n int, memo *[]int) int {
+	if n == 1 || n == 0 {
+		return 1
+	}
+
+	if (*memo)[n] != 0 {
+		return (*memo)[n]
+	}
+
+	count := 0
+	for i := 1; i <= n; i++ {
+		// 以i为根节点，则[1, i-1]为左子树，[i+1, n]为右子树
+		count += helper(i-1, memo) * helper(n-i, memo)
+	}
+
+	(*memo)[n] = count
+	return count
 }
