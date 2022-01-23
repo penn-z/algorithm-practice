@@ -59,6 +59,30 @@ func maxSubArray(nums []int) int {
 	return res
 }
 
+/*
+	贪心策略：
+		1. 用sum记录当前子序列之和，迭代过程中如果小于0，则放弃
+		2. res记录最大的子序列之和
+*/
+func maxSubArrayV2(nums []int) int {
+	if len(nums) == 0 {
+		return 0
+	}
+
+	maxInt := int(^uint(0) >> 1)
+	minInt := int(^maxInt)
+	sum, res := 0, minInt
+	for i := range nums {
+		sum += nums[i]
+		res = max(res, sum)
+		if sum < 0 {
+			sum = 0
+		}
+	}
+
+	return res
+}
+
 func max(x, y int) int {
 	if x > y {
 		return x
