@@ -22,6 +22,12 @@
 	由此，将任一点到底边的最小路径和，转化为了与该点相邻两点到底边的最小路径和中的较小值，再加上该点本身的值。
 
 
+	思路2: 动态规划
+	自底向上递推，可以避免重叠子问题
+	dp[i][j]表示从(i, j)到底边的最小路径和
+	d[i][j] = min(dp[i+1][j], dp[i+1][j+1]) + triangle[i][j]
+
+
 */
 package main
 
@@ -35,7 +41,8 @@ func main() {
 		{4, 1, 8, 3},
 	}
 
-	res := minimumTotal(triangle)
+	// res := minimumTotal(triangle)
+	res := minimumTotalDP(triangle)
 	fmt.Println("res:", res)
 
 }
@@ -75,4 +82,51 @@ func min(x, y int) int {
 	}
 
 	return y
+}
+
+/*
+	动态规划
+*/
+func minimumTotalDP(triangle [][]int) int {
+	if len(triangle) == 0 {
+		return 0
+	}
+
+	// 自底向上递推，规避重叠子问题及边界问题
+	/*
+		1. dp[i][j]表示从(i, j)到底边的最小路径和
+	*/
+
+	/*
+		2. 确定dp递推公式
+		dp[i][j] = min(dp[i+1][j], dp[i+1][j+1]) + triangle[i][j]
+	*/
+
+	/*
+		3. dp初始化
+		dp[i][j]初始化为0即可
+	*/
+
+	/*
+		4. 确定dp遍历顺序
+			i从底边开始遍历，取值范围为[len(triangle)-1, 0]
+			j从0开始遍历，取值范围为[0, i]
+	*/
+
+	// 5. 最终dp[0][0]即为路径和最小值
+
+	// dp[i]长度需要为len(triangle) + 1，多车这一层是为了满足初始dp[i][j]的递推不越界
+	n := len(triangle)
+	dp := make([][]int, n+1)
+	for i := range dp {
+		dp[i] = make([]int, n+1)
+	}
+
+	for i := n - 1; i >= 0; i-- {
+		for j := 0; j <= i; j++ {
+			dp[i][j] = min(dp[i+1][j], dp[i+1][j+1]) + triangle[i][j]
+		}
+	}
+
+	return dp[0][0]
 }
