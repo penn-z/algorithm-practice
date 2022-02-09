@@ -33,9 +33,7 @@ type TreeNode struct {
 
 // 最大路径和
 var (
-	maxInt        = int(^uint(0) >> 1)
-	minInt        = ^int(maxInt)
-	maxPathSumNum = minInt
+	maxPathSumNum = 0
 )
 
 func maxPathSum(root *TreeNode) int {
