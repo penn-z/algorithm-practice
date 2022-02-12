@@ -46,13 +46,13 @@ func reverseList(head *ListNode) *ListNode {
 
 // 递归法
 func reverseListRecusion(head *ListNode) *ListNode {
-	// base case
+	// base case，当前链表节点为nil，或者链表节点仅自己时，返回本身即可
 	if head == nil || head.Next == nil {
 		return head
 	}
 
-	// 递归处理当前节点的下一个节点，得到处理好的后面节点的反转链表
-	ret := reverseListRecusion(head.Next)
+	// 递归处理当前节点的下一个节点，得到处理好的后面节点的反转链表，新的链表头结点为last
+	last := reverseListRecusion(head.Next)
 
 	// 下一个节点的next指向当前head
 	head.Next.Next = head
@@ -60,5 +60,5 @@ func reverseListRecusion(head *ListNode) *ListNode {
 	// 当前head.next置为nil，防止产生环
 	head.Next = nil
 
-	return ret
+	return last
 }
